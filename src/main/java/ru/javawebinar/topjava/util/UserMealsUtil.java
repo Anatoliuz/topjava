@@ -36,8 +36,7 @@ public class UserMealsUtil {
         Map<LocalDate, Integer> dayCaloriesSum = new HashMap<>();
         for (UserMeal meal : meals) {
             dayCaloriesSum.put(meal.getDateTime().toLocalDate(),
-                    dayCaloriesSum.getOrDefault(meal.getDateTime().toLocalDate(), 0) +
-                            meal.getCalories());
+                    dayCaloriesSum.getOrDefault(meal.getDateTime().toLocalDate(), 0) + meal.getCalories());
         }
         List<UserMealWithExcess> filteredData = new ArrayList<>();
         for (UserMeal meal : meals) {
