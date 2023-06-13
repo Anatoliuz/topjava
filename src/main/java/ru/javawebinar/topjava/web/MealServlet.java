@@ -5,7 +5,6 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealTo;
 import ru.javawebinar.topjava.repo.InMemoryMealRepo;
 import ru.javawebinar.topjava.repo.MealRepo;
-import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import javax.servlet.ServletException;
@@ -15,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -38,7 +38,7 @@ public class MealServlet extends HttpServlet {
         switch (action == null ? "list" : action) {
             case "save":
                 request.setAttribute("action", action);
-                request.setAttribute("meal", new Meal(LocalDateTime.now(), "Введите еду", 0));
+                request.setAttribute("meal", new Meal(LocalDateTime.now(), "", 0));
                 forward = SAVE_OR_UPDATE;
                 log.debug("Redirect to: {}", forward);
                 break;
@@ -69,14 +69,14 @@ public class MealServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding("UTF-8");
-        LocalDateTime localDateTime = DateTimeUtil.dateTimeParse(request.getParameter("datetime"));
+        LocalDateTime localDateTime = LocalDateTime.parse(request.getParameter("datetime"),  DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         String description = request.getParameter("description");
         int calories = Integer.parseInt(request.getParameter("calories"));
         String stringId = request.getParameter("id");
         if (stringId.isEmpty()) {
-            repo.saveOrUpdate(new Meal(localDateTime, description, calories));
+            repo.save(new Meal(localDateTime, description, calories));
         } else {
-            repo.saveOrUpdate(new Meal(Integer.parseInt(stringId), localDateTime, description, calories));
+            repo.save(new Meal(Integer.parseInt(stringId), localDateTime, description, calories));
         }
         log.debug("Meal save/update");
 

@@ -2,6 +2,7 @@ package ru.javawebinar.topjava.repo;
 
 import ru.javawebinar.topjava.model.Meal;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface MealRepo {
@@ -10,8 +11,8 @@ public interface MealRepo {
 
     List<Meal> getAll();
 
-    Meal saveOrUpdate(Meal meal);
+    Meal save(Meal meal);
 
-    void delete(int id);
+    boolean delete(int id);
 
 }
