@@ -39,8 +39,10 @@ public class InMemoryMealRepository implements MealRepository {
                     mealsToCreate -> new ConcurrentHashMap<>()).put(meal.getId(), meal);
         } else {
             Map<Integer, Meal> userMeals = repository.get(userId);
-            userMeals.computeIfPresent(meal.getId(), (id, exMeal) -> meal);
-            return meal;
+            if(userMeals.containsKey(meal.getId())){
+                return userMeals.put(meal.getId(), meal);
+            }
+            return null;
         }
     }
 
