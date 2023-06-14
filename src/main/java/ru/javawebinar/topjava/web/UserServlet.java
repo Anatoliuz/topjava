@@ -23,7 +23,7 @@ public class UserServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         log.info("forward to meals");
         String userId = req.getParameter("userId");
-        if(!userId.isEmpty()){
+        if (!userId.isEmpty()) {
             SecurityUtil.setAuthUserId(Integer.parseInt(userId));
             log.info("logged as {}", userId);
         }
