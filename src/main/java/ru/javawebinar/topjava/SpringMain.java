@@ -6,7 +6,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
-import ru.javawebinar.topjava.web.MealServlet;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 import ru.javawebinar.topjava.web.user.AdminRestController;
 
@@ -24,7 +23,8 @@ public class SpringMain {
             MealRestController controller = appCtx.getBean(MealRestController.class);
             controller.getAll();
 
-            log.info("MealRestController getAll() called in SpringMain result: {}",controller.getAll() );;
+            log.info("MealRestController getAll() called in SpringMain result: {}", controller.getAll());
+            ;
         }
     }
 }
