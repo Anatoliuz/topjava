@@ -72,7 +72,8 @@ public class MealServlet extends HttpServlet {
                 log.info("filteredByDateTime");
                 request.setAttribute("meals",
                         controller.filteredByDateTime(DateTimeUtil.parseLocalDate(request.getParameter("fromDate")),
-                                DateTimeUtil.parseLocalDate(request.getParameter("toDate")), DateTimeUtil.parseLocalTime(request.getParameter("fromTime")),
+                                DateTimeUtil.parseLocalDate(request.getParameter("toDate")),
+                                DateTimeUtil.parseLocalTime(request.getParameter("fromTime")),
                                 DateTimeUtil.parseLocalTime(request.getParameter("toTime"))));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;

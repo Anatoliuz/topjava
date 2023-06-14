@@ -30,11 +30,16 @@ public class MealRestController {
         return MealsUtil.getTos(service.getAll(SecurityUtil.authUserId()), SecurityUtil.authUserCaloriesPerDay());
     }
 
-    public List<MealTo> filteredByDateTime(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
+    public List<MealTo> filteredByDateTime(LocalDate startDate, LocalDate endDate,
+                                           LocalTime startTime, LocalTime endTime) {
         log.info("filtered {} {}", startDate, endDate);
-        return MealsUtil.getFilteredTos(service.getFilteredByDate(startDate == null ? LocalDate.MIN : startDate,
-                        endDate == null ? LocalDate.MAX : endDate, SecurityUtil.authUserId()), SecurityUtil.authUserCaloriesPerDay(),
-                startTime == null ? LocalTime.MIN : startTime, endTime == null ? LocalTime.MAX : endTime);
+        return MealsUtil.getFilteredTos(
+                service.getFilteredByDate(
+                        startDate == null ? LocalDate.MIN : startDate,
+                        endDate == null ? LocalDate.MAX : endDate, SecurityUtil.authUserId()),
+                SecurityUtil.authUserCaloriesPerDay(),
+                startTime == null ? LocalTime.MIN : startTime,
+                endTime == null ? LocalTime.MAX : endTime);
     }
 
     public void delete(int id) {
