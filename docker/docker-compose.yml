@@ -1,0 +1,11 @@
+version: '2'
+services:
+  postgres:
+    image: postgres:13.0-alpine
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: topjava
+    ports:
+      - 5432:5432
+    
