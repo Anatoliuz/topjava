@@ -43,7 +43,8 @@ public class JdbcUserRepository implements UserRepository {
             user.setId(newKey.intValue());
         } else if (namedParameterJdbcTemplate.update(
                 "UPDATE users SET name=:name, email=:email, password=:password, " +
-                        "registered=:registered, enabled=:enabled, calories_per_day=:caloriesPerDay WHERE id=:id", parameterSource) == 0) {
+                        "registered=:registered, enabled=:enabled, calories_per_day=:caloriesPerDay WHERE id=:id",
+                parameterSource) == 0) {
             return null;
         }
         return user;
@@ -71,4 +72,5 @@ public class JdbcUserRepository implements UserRepository {
     public List<User> getAll() {
         return jdbcTemplate.query("SELECT * FROM users ORDER BY name, email", ROW_MAPPER);
     }
+
 }
