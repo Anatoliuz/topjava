@@ -35,20 +35,20 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 public class MealServiceTest {
 
     private static final Logger logger = getLogger(MealServiceTest.class);
-    private static final StringBuilder builder = new StringBuilder();
+    private static final StringBuilder timeBuffer = new StringBuilder();
 
     @Rule
     public final Stopwatch stopwatch = new Stopwatch() {
         protected void finished(long nanos, Description description) {
             long nanosToMillis = TimeUnit.NANOSECONDS.toMillis(nanos);
-            builder.append(String.format("\n %-30s %d ms", description.getMethodName(), nanosToMillis));
+            timeBuffer.append(String.format("\n %-30s %d ms", description.getMethodName(), nanosToMillis));
             logger.info("{} finished, time taken {} ms", description.getMethodName(), nanosToMillis);
         }
     };
 
     @AfterClass
     public static void afterClass() {
-        logger.info(builder.toString());
+        logger.info(timeBuffer.toString());
     }
 
     @Autowired
