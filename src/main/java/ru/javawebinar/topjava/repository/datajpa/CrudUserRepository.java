@@ -9,6 +9,7 @@ import ru.javawebinar.topjava.model.User;
 
 @Transactional(readOnly = true)
 public interface CrudUserRepository extends JpaRepository<User, Integer> {
+
     @Transactional
     @Modifying
 //    @Query(name = User.DELETE)
@@ -16,4 +17,8 @@ public interface CrudUserRepository extends JpaRepository<User, Integer> {
     int delete(@Param("id") int id);
 
     User getByEmail(String email);
+
+    @Query("SELECT u FROM User u LEFT JOIN FETCH u.meals AS m WHERE u.id=:id ORDER BY m.dateTime DESC")
+    User getWithMeals(@Param("id") int id);
+
 }

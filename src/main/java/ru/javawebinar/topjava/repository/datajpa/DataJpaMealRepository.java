@@ -49,4 +49,9 @@ public class DataJpaMealRepository implements MealRepository {
         return crudRepository.filteredByTimeInterval(startDateTime, endDateTime, userId);
     }
 
+    @Override
+    public Meal getWithUserByIdAndUserId(int id, int userId) {
+        return crudRepository.getWithUserByIdAndUserId(id, userId);
+    }
+
 }
