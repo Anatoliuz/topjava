@@ -32,7 +32,7 @@ public abstract class JdbcMealRepository implements MealRepository {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    protected abstract <T> T changeDateTimeType(LocalDateTime dateTime);
+    protected abstract <T> T getDateTimeType(LocalDateTime dateTime);
 
     @Override
     public Meal save(Meal meal, int userId) {
@@ -40,7 +40,7 @@ public abstract class JdbcMealRepository implements MealRepository {
                 .addValue("id", meal.getId())
                 .addValue("description", meal.getDescription())
                 .addValue("calories", meal.getCalories())
-                .addValue("date_time", changeDateTimeType(meal.getDateTime()))
+                .addValue("date_time", getDateTimeType(meal.getDateTime()))
                 .addValue("user_id", userId);
 
         if (meal.isNew()) {
@@ -79,6 +79,6 @@ public abstract class JdbcMealRepository implements MealRepository {
     public List<Meal> getBetweenHalfOpen(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
         return jdbcTemplate.query(
                 "SELECT * FROM meal WHERE user_id=?  AND date_time >=  ? AND date_time < ? ORDER BY date_time DESC",
-                ROW_MAPPER, userId, changeDateTimeType(startDateTime), changeDateTimeType(endDateTime));
+                ROW_MAPPER, userId, getDateTimeType(startDateTime), getDateTimeType(endDateTime));
     }
 }

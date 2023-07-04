@@ -19,7 +19,7 @@ public class PostgresJdbcMealRepository extends JdbcMealRepository {
     }
 
     @Override
-    public LocalDateTime changeDateTimeType(LocalDateTime dateTime) {
+    public LocalDateTime getDateTimeType(LocalDateTime dateTime) {
         return dateTime;
     }
 
