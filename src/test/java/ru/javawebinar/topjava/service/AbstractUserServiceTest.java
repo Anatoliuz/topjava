@@ -34,12 +34,15 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     @Autowired
     private CacheManager cacheManager;
 
-    @Autowired
+    @Autowired(required = false)
     protected JpaUtil jpaUtil;
 
     @Before
     public void setup() {
         cacheManager.getCache("users").clear();
+        if (isJdbcProfile()) {
+            return;
+        }
         jpaUtil.clear2ndLevelHibernateCache();
     }
 
@@ -102,13 +105,16 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
     @Test
     public void createWithException() throws Exception {
-        boolean isJdbcProfile = Arrays.asList(env.getActiveProfiles()).contains(Profiles.JDBC);
-        Assume.assumeFalse(isJdbcProfile);
+        Assume.assumeFalse(isJdbcProfile());
         validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "  ", "mail@yandex.ru", "password", Role.USER)));
         validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "User", "  ", "password", Role.USER)));
         validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "User", "mail@yandex.ru", "  ", Role.USER)));
         validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "User", "mail@yandex.ru", "password", 9, true, new Date(), Set.of())));
         validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "User", "mail@yandex.ru", "password", 10001, true, new Date(), Set.of())));
+    }
+
+    private boolean isJdbcProfile() {
+        return Arrays.asList(env.getActiveProfiles()).contains(Profiles.JDBC);
     }
 
 }
