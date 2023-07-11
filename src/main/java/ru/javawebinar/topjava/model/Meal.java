@@ -45,7 +45,7 @@ public class Meal extends AbstractBaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @NotNull
+    //   @NotNull
     private User user;
 
     public Meal() {
@@ -66,16 +66,16 @@ public class Meal extends AbstractBaseEntity {
         return dateTime;
     }
 
+    public LocalDate getDate() {
+        return dateTime.toLocalDate();
+    }
+
     public String getDescription() {
         return description;
     }
 
     public int getCalories() {
         return calories;
-    }
-
-    public LocalDate getDate() {
-        return dateTime.toLocalDate();
     }
 
     public LocalTime getTime() {
