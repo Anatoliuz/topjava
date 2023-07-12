@@ -4,7 +4,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.dao.DataAccessException;
+import ru.javawebinar.topjava.Profiles;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.JpaUtil;
@@ -26,13 +29,25 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     @Autowired
     private CacheManager cacheManager;
 
-    @Autowired(required = false)
-    protected JpaUtil jpaUtil;
+    @Autowired
+    private JpaUtil jpaUtil;
+
+    @Bean
+    @Profile({Profiles.JPA, Profiles.DATAJPA})
+    public  JpaUtil jpaUtil() {
+        return new JpaUtil();
+    }
+
+    @Bean
+    @Profile(Profiles.JDBC)
+    public JpaUtil jpaUtilNull() {
+        return null;
+    }
 
     @Before
     public void setup() {
         cacheManager.getCache("users").clear();
-        if(!isJdbc()) {
+        if (!isJdbc()) {
             jpaUtil.clear2ndLevelHibernateCache();
         }
     }
@@ -96,7 +111,7 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
     @Test
     public void createWithException() throws Exception {
-     //   Assume.assumeFalse(isJdbc());
+        //   Assume.assumeFalse(isJdbc());
 
         validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "  ", "mail@yandex.ru", "password", Role.USER)));
         validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "User", "  ", "password", Role.USER)));
@@ -125,4 +140,5 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
         service.update(user);
         USER_MATCHER.assertMatch(service.get(GUEST_ID), getUpdatedBySettingRole());
     }
+
 }

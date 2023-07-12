@@ -14,6 +14,7 @@ import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 import ru.javawebinar.topjava.util.ValidationUtil;
+
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -50,7 +51,7 @@ public class JdbcUserRepository implements UserRepository {
         if (user.isNew()) {
             Number newKey = insertUser.executeAndReturnKey(parameterSource);
             user.setId(newKey.intValue());
-            setRoles(user.id(), user.getRoles());
+            insertUserRoles(user.id(), user.getRoles());
         } else if (namedParameterJdbcTemplate.update("UPDATE users SET name=:name, email=:email, " +
                         "password=:password, registered=:registered, enabled=:enabled, " +
                         "calories_per_day=:caloriesPerDay WHERE id=:id",
@@ -58,7 +59,7 @@ public class JdbcUserRepository implements UserRepository {
             return null;
         } else {
             deleteRoles(user.id());
-            setRoles(user.id(), user.getRoles());
+            insertUserRoles(user.id(), user.getRoles());
         }
         return user;
     }
@@ -73,17 +74,16 @@ public class JdbcUserRepository implements UserRepository {
     public User get(int id) {
         User user = DataAccessUtils.singleResult(jdbcTemplate.query("SELECT * FROM users WHERE id=?", ROW_MAPPER, id));
         if (user != null) {
-            setRoles(user);
+            fetchAndSetUserRoles(user);
         }
         return user;
     }
 
     @Override
     public User getByEmail(String email) {
-//        return jdbcTemplate.queryForObject("SELECT * FROM users WHERE email=?", ROW_MAPPER, email);
         User user = DataAccessUtils.singleResult(jdbcTemplate.query("SELECT * FROM users WHERE email=?", ROW_MAPPER, email));
         if (user != null) {
-            setRoles(user);
+            fetchAndSetUserRoles(user);
         }
         return user;
     }
@@ -95,29 +95,32 @@ public class JdbcUserRepository implements UserRepository {
                 "u.id ORDER BY u.name, u.email", ROW_MAPPER);
     }
 
-    private void setRoles(User user) {
+    private void fetchAndSetUserRoles(User user) {
         Integer id = user.getId();
-        List <Role> roles = jdbcTemplate.queryForList("SELECT role FROM user_role WHERE user_id = ?", Role.class, id);
+        List<Role> roles = jdbcTemplate.queryForList("SELECT role FROM user_role WHERE user_id = ?", Role.class, id);
         user.setRoles(roles);
     }
 
-    private int[] setRoles(int userId, Set<Role> roles) {
+    private int[] insertUserRoles(int userId, Set<Role> roles) {
         List<Role> rolesList = new ArrayList<>(roles);
-        return jdbcTemplate.batchUpdate("INSERT INTO user_role (user_id, role) values (?, ?)", new BatchPreparedStatementSetter() {
-            @Override
-            public void setValues(PreparedStatement ps, int i) throws SQLException {
-                ps.setInt(1, userId);
-                ps.setString(2, rolesList.get(i).name());
-            }
+        return !rolesList.isEmpty() ? jdbcTemplate.batchUpdate(
+                "INSERT INTO user_role (user_id, role) values (?, ?)",
+                new BatchPreparedStatementSetter() {
+                    @Override
+                    public void setValues(PreparedStatement ps, int i) throws SQLException {
+                        ps.setInt(1, userId);
+                        ps.setString(2, rolesList.get(i).name());
+                    }
 
-            @Override
-            public int getBatchSize() {
-                return rolesList.size();
-            }
-        });
+                    @Override
+                    public int getBatchSize() {
+                        return rolesList.size();
+                    }
+                }) : null;
     }
 
     public void deleteRoles(int userId) {
         jdbcTemplate.update("DELETE FROM user_role WHERE user_id=?", userId);
     }
+
 }
