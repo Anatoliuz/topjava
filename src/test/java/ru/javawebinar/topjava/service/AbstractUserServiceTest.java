@@ -32,18 +32,6 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     @Autowired
     private JpaUtil jpaUtil;
 
-    @Bean
-    @Profile({Profiles.JPA, Profiles.DATAJPA})
-    public  JpaUtil jpaUtil() {
-        return new JpaUtil();
-    }
-
-    @Bean
-    @Profile(Profiles.JDBC)
-    public JpaUtil jpaUtilNull() {
-        return null;
-    }
-
     @Before
     public void setup() {
         cacheManager.getCache("users").clear();
