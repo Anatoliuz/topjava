@@ -17,9 +17,7 @@ public interface CrudUserRepository extends JpaRepository<User, Integer> {
 
     User getByEmail(String email);
 
-    // @EntityGraph(attributePaths = {"meals", "roles"})
     @Query("SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.meals WHERE u.id=?1")
-    // @QueryHints(value = { @QueryHint(name = HINT_PASS_DISTINCT_THROUGH, value = "false")})
     User getWithMeals(int id);
 
 }

@@ -1,31 +1,19 @@
 package ru.javawebinar.topjava.service.datajpa;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import ru.javawebinar.topjava.MealTestData;
 import ru.javawebinar.topjava.model.User;
-import ru.javawebinar.topjava.repository.JpaUtil;
-import ru.javawebinar.topjava.service.AbstractUserServiceTest;
+import ru.javawebinar.topjava.service.AbstractUserServiceJpaUtilTest;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import static ru.javawebinar.topjava.MealTestData.MEAL_MATCHER;
 import static ru.javawebinar.topjava.Profiles.DATAJPA;
-import static ru.javawebinar.topjava.Profiles.HSQL_DB;
 import static ru.javawebinar.topjava.UserTestData.*;
 
-@ActiveProfiles({DATAJPA, HSQL_DB})
-public class DataJpaUserServiceTest extends AbstractUserServiceTest {
-
-    @Autowired
-    private JpaUtil jpaUtil;
-
-    @Before
-    public void setup() {
-        jpaUtil.clear2ndLevelHibernateCache();
-    }
+@ActiveProfiles({DATAJPA})
+public class DataJpaUserServiceTest extends AbstractUserServiceJpaUtilTest {
 
     @Test
     public void getWithMeals() {
