@@ -78,7 +78,7 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void aaaupdate() {
+    public void update() {
         User updated = getUpdated();
         service.update(updated);
         USER_MATCHER.assertMatch(
@@ -88,7 +88,7 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void aagetAll() {
+    public void getAll() {
         cacheManager.getCache("users").clear();
         List<User> all = service.getAll();
         USER_MATCHER.assertMatch(all, admin, guest, user);
