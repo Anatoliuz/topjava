@@ -82,9 +82,9 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
         User updated = getUpdated();
         service.update(updated);
         USER_MATCHER.assertMatch(
-                service.getAll().stream().filter(u -> u.getId() == USER_ID)
-                        .findFirst().orElse(null),
-                getUpdated());
+                service.getAll().stream().filter(u -> u.getId() == USER_ID).findFirst().orElse(null),
+                getUpdated()
+        );
     }
 
     @Test
