@@ -22,6 +22,10 @@ function add() {
     $("#editRow").modal();
 }
 
+function clearAndUpdateTable(data) {
+    ctx.datatableApi.clear().rows.add(data).draw();
+}
+
 function deleteRow(id) {
     $.ajax({
         url: ctx.ajaxUrl + id,
